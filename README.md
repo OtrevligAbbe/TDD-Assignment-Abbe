@@ -1,56 +1,74 @@
 
-# TDD Assignment Abbe 🌟
+# TDD Assignment Abbe
 
-Welcome to the **TDD Assignment Abbe** repository! This project demonstrates test-driven development (TDD) concepts applied to various programming tasks, including banking, inventory management, string processing, and more. 🚀
+🎉 Welcome to the **TDD Assignment Abbe** project! This repository contains a collection of test-driven development (TDD) assignments with various classes and tests implemented using xUnit.
 
-## 📂 Project Structure
-Here's an overview of the project's structure:
-- `BankAccount` 🏦: Simulates a bank account with deposit and withdrawal functionalities.
-- `InventoryManager` 📦: Handles inventory management tasks like adding, removing, and tracking items.
-- `StringProcessor` 🔤: Performs string-related operations such as sanitization and comparison.
-- `BookingSystem` 📅: Manages time slot bookings with overlapping prevention.
-- `ObjectValidator` ✅: Validates objects for null values and identifies null properties.
+## 📚 Project Structure
 
-## 🛠️ Features
-1. **Bank Account**:
-   - Deposit and withdraw amounts.
-   - Throws exceptions for invalid operations like overdrawing.
-2. **Inventory Management**:
-   - Add and remove items with quantity checks.
-   - Identify out-of-stock items.
-3. **String Processing**:
-   - Clean up strings by removing special characters.
-   - Compare strings for equality.
-4. **Booking System**:
-   - Book and retrieve available time slots.
-   - Ensure no overlapping bookings.
-5. **Object Validation**:
-   - Check if an object is null.
-   - Retrieve a list of null properties in an object.
+### Classes
+- `BankAccount.cs`: Manages deposits and withdrawals with balance checks.
+- `BookingSystem.cs`: Handles booking time slots and retrieving available time slots.
+- `Calculator.cs`: Performs basic arithmetic operations.
+- `InventoryManager.cs`: Manages inventory items, their quantities, and stock statuses.
+- `ObjectValidator.cs`: Validates objects for null values and retrieves null properties.
+- `StringProcessor.cs`: Processes strings with various utility methods.
+- `WeatherClient.cs`: Retrieves current weather conditions using a facade pattern.
 
-## 🧪 Testing
-The project uses **xUnit** for testing with a focus on:
-- Unit testing 🧩
-- Mocking external dependencies 🎭
-- Exception handling 🔒
-- Edge case coverage 🚧
+### Facades
+- `BookingSystemFacade.cs`: Acts as an interface for managing bookings with `BookingSystem`.
 
-## 🔧 Setup and Installation
+### Tests
+- `BankAccountTest.cs`: Validates `BankAccount` functionality.
+- `BookingSystemTest.cs`: Tests the booking system's core features.
+- `CalculatorTest.cs`: Ensures correct operations in `Calculator`.
+- `InventoryManagerTest.cs`: Covers inventory management operations.
+- `ObjectValidatorTest.cs`: Validates `ObjectValidator` methods.
+- `StringProcessorTest.cs`: Ensures string operations are functioning as expected.
+- `WeatherClientTest.cs`: Mocks and tests weather client interactions.
+- `BookingSystemFacadeTest.cs`: Tests the facade's ability to interact with `BookingSystem`.
+
+## 🛠️ Features Added
+### Booking System
+- Added `BookingSystemFacade.cs` to streamline booking operations.
+- Added comprehensive tests in `BookingSystemFacadeTest.cs`.
+
+### Null Object Validation
+- `ObjectValidator.cs`: Validates objects for null properties and provides a list of null fields.
+
+## 🚀 Getting Started
+
+### Prerequisites
+- [.NET SDK](https://dotnet.microsoft.com/download)
+- IDE (e.g., Visual Studio, Rider)
+- xUnit Test Runner
+
+### Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/TDD-Assignment-Abbe.git
+   git clone https://github.com/your-username/TDD-Assignment-Abbe.git
+   cd TDD-Assignment-Abbe
    ```
-2. Open the project in Visual Studio.
-3. Build the solution and restore NuGet packages.
-4. Run tests using the Test Explorer.
 
-## 📜 License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+2. Build the solution:
+   ```bash
+   dotnet build
+   ```
 
-## 🤝 Contribution
-Contributions are welcome! Feel free to open issues and submit pull requests.
+3. Run tests:
+   ```bash
+   dotnet test
+   ```
+
+### Usage
+- Modify or add features as needed.
+- Run tests frequently to ensure functionality.
+
+## 🤝 Contributing
+Contributions are welcome! Feel free to submit pull requests or raise issues.
+
+## 📝 License
+This project is licensed under the MIT License.
 
 ---
 
-🎉 Happy Coding! If you like this project, don't forget to give it a ⭐!
-
+💻 Happy Coding! 🎉
