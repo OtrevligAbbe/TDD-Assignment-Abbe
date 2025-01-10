@@ -10,12 +10,14 @@ public class WeatherClient
         _httpClient = httpClient;
     }
 
-    // Hämta väderinformation från API:t (mockas i testerna)
     public async Task<string> GetCurrentWeatherAsync(string city)
     {
-        // Mockad URL för API
-        string url = $"https://api.weather.com/v1/city/{city}/weather";
-        HttpResponseMessage response = await _httpClient.GetAsync(url);
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            throw new ArgumentException("City name cannot be null or empty", nameof(city));
+        }
+
+        var response = await _httpClient.GetAsync($"https://api.weather.com/v3/weather/{city}");
 
         if (!response.IsSuccessStatusCode)
         {

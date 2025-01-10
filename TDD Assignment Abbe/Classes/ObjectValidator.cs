@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 
-public class NullControl
+public class ObjectValidator
 {
-    // Metod för att kontrollera om ett objekt är null
+    // Method to check if an object is null
     public bool IsNull(object obj)
     {
         return obj == null;
     }
 
-    // Metod för att hämta en lista över properties som är null
+    // Method to get a list of property names that are null in the given object
     public List<string> GetNullProperties(object obj)
     {
         if (obj == null)
@@ -21,10 +20,10 @@ public class NullControl
 
         List<string> nullProperties = new List<string>();
 
-        // Iterera över alla publika properties i objektet
+        // Loop through all public properties of the object
         foreach (PropertyInfo property in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            // Kontrollera om property-värdet är null
+            // Check if the property value is null
             if (property.GetValue(obj) == null)
             {
                 nullProperties.Add(property.Name);

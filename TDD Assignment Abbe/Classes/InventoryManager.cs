@@ -4,12 +4,15 @@ using System.Linq;
 
 public class InventoryManager
 {
-    // Dictionary för att hålla reda på lagerstatus
     private readonly Dictionary<string, int> _inventory = new Dictionary<string, int>();
 
-    // Lägg till ett objekt till lagret
     public void AddItem(string itemName, int quantity)
     {
+        if (string.IsNullOrWhiteSpace(itemName))
+        {
+            throw new ArgumentException("Item name cannot be null or empty.");
+        }
+
         if (quantity <= 0)
         {
             throw new ArgumentException("Quantity must be greater than zero.");
@@ -25,12 +28,11 @@ public class InventoryManager
         }
     }
 
-    // Ta bort ett objekt från lagret
     public void RemoveItem(string itemName, int quantity)
     {
-        if (!_inventory.ContainsKey(itemName))
+        if (string.IsNullOrWhiteSpace(itemName))
         {
-            throw new KeyNotFoundException($"Item '{itemName}' not found in inventory.");
+            throw new ArgumentException("Item name cannot be null or empty.");
         }
 
         if (quantity <= 0)
@@ -38,20 +40,42 @@ public class InventoryManager
             throw new ArgumentException("Quantity must be greater than zero.");
         }
 
+        if (!_inventory.ContainsKey(itemName))
+        {
+            throw new InvalidOperationException("Item does not exist in inventory.");
+        }
+
         if (_inventory[itemName] < quantity)
         {
-            throw new InvalidOperationException($"Not enough '{itemName}' in stock to remove {quantity}.");
+            throw new InvalidOperationException("Not enough items in inventory.");
         }
 
+        // Reduce the quantity but leave the item in the inventory if it reaches 0
         _inventory[itemName] -= quantity;
+    }
 
-        // Ta bort objektet från inventeringen om kvantiteten blir 0
-        if (_inventory[itemName] == 0)
+
+
+    public List<string> GetOutOfStockItems()
+    {
+        // Returnera endast objekt som inte finns i lager (där Value == 0)
+        return _inventory.Where(item => item.Value == 0)
+                         .Select(item => item.Key)
+                         .ToList();
+    }
+
+
+
+    public int GetItemQuantity(string itemName)
+    {
+        if (string.IsNullOrWhiteSpace(itemName))
         {
-            _inventory.Remove(itemName);
+            throw new ArgumentException("Item name cannot be null or empty.");
         }
+
+        return _inventory.ContainsKey(itemName) ? _inventory[itemName] : 0;
     }
 }
-    // Hämta en lista på varor som inte finns på lager (quantity = 0)
+
 
 
