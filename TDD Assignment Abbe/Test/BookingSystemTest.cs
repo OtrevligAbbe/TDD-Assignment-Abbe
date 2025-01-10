@@ -1,62 +1,53 @@
-﻿using Xunit;
+﻿using System;
 using TDD_Assignment_Abbe.Classes;
+using Xunit;
 
 namespace TDD_Assignment_Abbe.Test
 {
-
-    public class BookingSystemTests
+    public class BookingSystemTest
     {
-        [Fact]
-        public void BookTimeSlot_ReturnsTrue_WhenNoConflicts()
+        private readonly BookingSystem _bookingSystem;
+
+        public BookingSystemTest()
         {
-            // Arrange
-            var bookingSystem = new BookingSystem();
+            _bookingSystem = new BookingSystem();
+        }
 
-            // Act
-            bool result = bookingSystem.BookTimeSlot(new DateTime(2025, 01, 10, 10, 0, 0), new DateTime(2025, 01, 10, 11, 0, 0));
-
-            // Assert
+        [Fact]
+        public void BookTimeSlot_ReturnsTrue_WhenSlotIsAvailable()
+        {
+            var result = _bookingSystem.BookTimeSlot(DateTime.Now.AddHours(1), DateTime.Now.AddHours(2));
             Assert.True(result);
         }
 
         [Fact]
-        public void BookTimeSlot_ReturnsFalse_WhenOverlapOccurs()
+        public void BookTimeSlot_ReturnsFalse_WhenSlotIsNotAvailable()
         {
-            // Arrange
-            var bookingSystem = new BookingSystem();
-            bookingSystem.BookTimeSlot(new DateTime(2025, 01, 10, 10, 0, 0), new DateTime(2025, 01, 10, 11, 0, 0));
-
-            // Act
-            bool result = bookingSystem.BookTimeSlot(new DateTime(2025, 01, 10, 10, 30, 0), new DateTime(2025, 01, 10, 11, 30, 0));
-
-            // Assert
+            _bookingSystem.BookTimeSlot(DateTime.Now.AddHours(1), DateTime.Now.AddHours(2));
+            var result = _bookingSystem.BookTimeSlot(DateTime.Now.AddHours(1).AddMinutes(30), DateTime.Now.AddHours(2));
             Assert.False(result);
-        }
-
-        [Fact]
-        public void GetAvailableTimeSlots_ReturnsCorrectGaps()
-        {
-            // Arrange
-            var bookingSystem = new BookingSystem();
-            bookingSystem.BookTimeSlot(new DateTime(2025, 01, 10, 09, 0, 0), new DateTime(2025, 01, 10, 10, 0, 0));
-            bookingSystem.BookTimeSlot(new DateTime(2025, 01, 10, 11, 0, 0), new DateTime(2025, 01, 10, 12, 0, 0));
-
-            // Act
-            var availableSlots = bookingSystem.GetAvailableTimeSlots(new DateTime(2025, 01, 10, 08, 0, 0), new DateTime(2025, 01, 10, 13, 0, 0));
-
-            // Assert
-            Assert.Contains(new DateTime(2025, 01, 10, 10, 0, 0), availableSlots);
-            Assert.Contains(new DateTime(2025, 01, 10, 12, 0, 0), availableSlots);
         }
 
         [Fact]
         public void BookTimeSlot_ThrowsArgumentException_WhenStartTimeIsAfterEndTime()
         {
-            // Arrange
-            var bookingSystem = new BookingSystem();
+            Assert.Throws<ArgumentException>(() => _bookingSystem.BookTimeSlot(DateTime.Now.AddHours(2), DateTime.Now.AddHours(1)));
+        }
 
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => bookingSystem.BookTimeSlot(new DateTime(2025, 01, 10, 11, 0, 0), new DateTime(2025, 01, 10, 10, 0, 0)));
+        [Fact]
+        public void GetAvailableTimeSlots_ReturnsCorrectSlots()
+        {
+            var dayStart = DateTime.Now.AddHours(1);
+            var dayEnd = dayStart.AddHours(5);
+
+            _bookingSystem.BookTimeSlot(dayStart.AddMinutes(30), dayStart.AddMinutes(60));
+            _bookingSystem.BookTimeSlot(dayStart.AddMinutes(90), dayStart.AddMinutes(120));
+
+            var availableSlots = _bookingSystem.GetAvailableTimeSlots(dayStart, dayEnd);
+
+            Assert.NotNull(availableSlots);
+            Assert.DoesNotContain(dayStart.AddMinutes(30), availableSlots);
+            Assert.DoesNotContain(dayStart.AddMinutes(90), availableSlots);
         }
     }
 }

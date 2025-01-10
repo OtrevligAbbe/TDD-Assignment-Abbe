@@ -1,75 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Xunit;
 
-public class BookingSystem
+namespace TDD_Assignment_Abbe.Classes
 {
-    public List<Booking> Bookings { get; private set; } = new List<Booking>();
-
-    public bool BookTimeSlot(DateTime startTime, DateTime endTime)
+    public class BookingSystem
     {
-        // Validate input
-        if (startTime >= endTime)
-        {
-            throw new ArgumentException("Start time must be earlier than end time.");
-        }
+        private readonly List<Booking> _bookings = new List<Booking>();
 
-        // Check for conflicts
-        foreach (var booking in Bookings)
+        public IEnumerable<Booking> Bookings => _bookings.AsReadOnly();
+
+        public bool BookTimeSlot(DateTime startTime, DateTime endTime)
         {
-            if (startTime < booking.EndTime && endTime > booking.StartTime)
+            if (startTime >= endTime)
+                throw new ArgumentException("Start time must be earlier than end time.");
+
+            if (_bookings.Any(b => b.Start < endTime && b.End > startTime))
             {
-                return false; // Overlap detected
+                return false; // Time slot is not available
             }
+
+            _bookings.Add(new Booking { Start = startTime, End = endTime });
+            return true;
         }
 
-        // Add new booking
-        Bookings.Add(new Booking { StartTime = startTime, EndTime = endTime });
-        return true;
-    }
-
-    public List<DateTime> GetAvailableTimeSlots(DateTime dayStart, DateTime dayEnd)
-    {
-        var availableSlots = new List<DateTime>();
-
-        if (Bookings.Count == 0)
+        public List<DateTime> GetAvailableTimeSlots(DateTime dayStart, DateTime dayEnd)
         {
-            availableSlots.Add(dayStart);
-            availableSlots.Add(dayEnd);
+            var availableSlots = new List<DateTime>();
+            for (var currentTime = dayStart; currentTime < dayEnd; currentTime = currentTime.AddMinutes(30))
+            {
+                if (!_bookings.Any(booking => booking.Start <= currentTime && booking.End > currentTime))
+                {
+                    availableSlots.Add(currentTime);
+                }
+            }
             return availableSlots;
         }
-
-        // Sort bookings by start time
-        var sortedBookings = Bookings.OrderBy(b => b.StartTime).ToList();
-
-        // Add gaps between bookings
-        DateTime currentTime = dayStart;
-
-        foreach (var booking in sortedBookings)
-        {
-            if (currentTime < booking.StartTime)
-            {
-                availableSlots.Add(currentTime);
-                availableSlots.Add(booking.StartTime);
-            }
-            currentTime = booking.EndTime;
-        }
-
-        // Add remaining time after last booking
-        if (currentTime < dayEnd)
-        {
-            availableSlots.Add(currentTime);
-            availableSlots.Add(dayEnd);
-        }
-
-        return availableSlots;
     }
-}
 
-public class Booking
-{
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    public class Booking
+    {
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+    }
 }
 
