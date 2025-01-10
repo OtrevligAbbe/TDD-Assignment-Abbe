@@ -1,74 +1,96 @@
 
-# TDD Assignment Abbe
+# TDD Assignment Abbe 📚
 
-🎉 Welcome to the **TDD Assignment Abbe** project! This repository contains a collection of test-driven development (TDD) assignments with various classes and tests implemented using xUnit.
-
-## 📚 Project Structure
-
-### Classes
-- `BankAccount.cs`: Manages deposits and withdrawals with balance checks.
-- `BookingSystem.cs`: Handles booking time slots and retrieving available time slots.
-- `Calculator.cs`: Performs basic arithmetic operations.
-- `InventoryManager.cs`: Manages inventory items, their quantities, and stock statuses.
-- `ObjectValidator.cs`: Validates objects for null values and retrieves null properties.
-- `StringProcessor.cs`: Processes strings with various utility methods.
-- `WeatherClient.cs`: Retrieves current weather conditions using a facade pattern.
-
-### Facades
-- `BookingSystemFacade.cs`: Acts as an interface for managing bookings with `BookingSystem`.
-
-### Tests
-- `BankAccountTest.cs`: Validates `BankAccount` functionality.
-- `BookingSystemTest.cs`: Tests the booking system's core features.
-- `CalculatorTest.cs`: Ensures correct operations in `Calculator`.
-- `InventoryManagerTest.cs`: Covers inventory management operations.
-- `ObjectValidatorTest.cs`: Validates `ObjectValidator` methods.
-- `StringProcessorTest.cs`: Ensures string operations are functioning as expected.
-- `WeatherClientTest.cs`: Mocks and tests weather client interactions.
-- `BookingSystemFacadeTest.cs`: Tests the facade's ability to interact with `BookingSystem`.
-
-## 🛠️ Features Added
-### Booking System
-- Added `BookingSystemFacade.cs` to streamline booking operations.
-- Added comprehensive tests in `BookingSystemFacadeTest.cs`.
-
-### Null Object Validation
-- `ObjectValidator.cs`: Validates objects for null properties and provides a list of null fields.
-
-## 🚀 Getting Started
-
-### Prerequisites
-- [.NET SDK](https://dotnet.microsoft.com/download)
-- IDE (e.g., Visual Studio, Rider)
-- xUnit Test Runner
-
-### Setup
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/TDD-Assignment-Abbe.git
-   cd TDD-Assignment-Abbe
-   ```
-
-2. Build the solution:
-   ```bash
-   dotnet build
-   ```
-
-3. Run tests:
-   ```bash
-   dotnet test
-   ```
-
-### Usage
-- Modify or add features as needed.
-- Run tests frequently to ensure functionality.
-
-## 🤝 Contributing
-Contributions are welcome! Feel free to submit pull requests or raise issues.
-
-## 📝 License
-This project is licensed under the MIT License.
+Welcome to the **TDD Assignment Abbe** repository! This project demonstrates the principles of **Test-Driven Development (TDD)** with a focus on various functionalities like inventory management, string processing, banking operations, and booking systems.
 
 ---
 
-💻 Happy Coding! 🎉
+## Features ✨
+
+### Inventory Management
+- Add, remove, and track items in an inventory.
+- Check for out-of-stock items.
+
+### String Processor
+- Sanitize strings, remove unwanted characters, and perform case conversions.
+- Compare strings with various criteria.
+
+### Bank Account
+- Handle deposits, withdrawals, and balance checks.
+- Includes validation for negative or zero transactions.
+
+### Weather Client
+- Fetch current weather data asynchronously.
+- Handle HTTP requests with mock responses.
+
+### Booking System 🗓️
+- Manage bookings with available time slots.
+- Includes:
+  - **BookingSystem**: Core logic for booking operations.
+  - **BookingServiceFacade**: Simplified interface for managing bookings.
+  - Tests implemented using **xUnit**.
+
+---
+
+## Technology Stack 🛠️
+- **C#**: The programming language.
+- **xUnit**: Testing framework.
+- **Moq**: For mocking dependencies in tests.
+
+---
+
+## Folder Structure 📂
+```plaintext
+.
+├── Classes
+│   ├── BankAccount.cs
+│   ├── BookingSystem.cs
+│   ├── Calculator.cs
+│   ├── InventoryManager.cs
+│   ├── ObjectValidator.cs
+│   ├── StringProcessor.cs
+│   ├── WeatherClient.cs
+├── Facade
+│   ├── BookingSystemFacade.cs
+│   └── WeatherClientFacade.cs
+├── Test
+│   ├── BankAccountTest.cs
+│   ├── BookingSystemTest.cs
+│   ├── BookingSystemFacadeTest.cs
+│   ├── CalculatorTest.cs
+│   ├── InventoryManagerTest.cs
+│   ├── ObjectValidatorTest.cs
+│   ├── StringProcessorTest.cs
+│   └── WeatherClientTest.cs
+├── TestHelpers
+│   └── MockHttpMessageHandler.cs
+└── README.md
+```
+
+---
+
+## How to Run 🚀
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/username/TDD-Assignment-Abbe.git
+   ```
+2. **Open the solution** in Visual Studio.
+3. **Build the solution** to restore dependencies.
+4. **Run all tests** using the Test Explorer.
+
+---
+
+## Tests 🧪
+
+- Tests are written for all major components using **xUnit**.
+- Includes **mocking** for external dependencies.
+- To run tests:
+  1. Open the Test Explorer in Visual Studio.
+  2. Run all tests.
+
+---
+
+## License 📜
+
+This project is licensed under the MIT License.
