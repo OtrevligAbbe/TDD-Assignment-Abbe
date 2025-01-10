@@ -10,6 +10,7 @@ namespace TDD_Assignment_Abbe.Test
 {
     public class WeatherClientTests
     {
+        // Tests that GetCurrentWeatherAsync returns the correct data when the API responds successfully
         [Fact]
         public async Task GetCurrentWeatherAsync_ReturnsCorrectData()
         {
@@ -37,8 +38,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Contains("Sunny", result);
         }
 
-
-
+        // Tests that GetCurrentWeatherAsync throws an HttpRequestException when the API responds with an error
         [Fact]
         public async Task GetCurrentWeatherAsync_ThrowsHttpRequestException_OnInvalidResponse()
         {
@@ -61,8 +61,6 @@ namespace TDD_Assignment_Abbe.Test
             // Act & Assert
             await Assert.ThrowsAsync<HttpRequestException>(() => weatherClient.GetCurrentWeatherAsync("InvalidCity"));
         }
-
-
-
     }
 }
+

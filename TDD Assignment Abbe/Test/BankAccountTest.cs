@@ -6,6 +6,7 @@ namespace TDD_Assignment_Abbe.Test
 {
     public class BankAccountTests
     {
+        // Tests that depositing an amount increases the balance correctly
         [Fact]
         public void Deposit_IncreasesBalanceCorrectly()
         {
@@ -20,6 +21,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Equal(depositAmount, account.Balance);
         }
 
+        // Tests that withdrawing an amount decreases the balance correctly
         [Fact]
         public void Withdraw_DecreasesBalanceCorrectly()
         {
@@ -35,6 +37,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Equal(150m, account.Balance);
         }
 
+        // Tests that withdrawing more than the balance throws an exception
         [Fact]
         public void Withdraw_ThrowsException_WhenAmountExceedsBalance()
         {
@@ -46,6 +49,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Throws<InvalidOperationException>(() => account.Withdraw(150m));
         }
 
+        // Tests that depositing a negative amount throws an exception
         [Fact]
         public void Deposit_ThrowsException_WhenAmountIsNegative()
         {
@@ -56,6 +60,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Throws<ArgumentException>(() => account.Deposit(-50m));
         }
 
+        // Tests that withdrawing a negative amount throws an exception
         [Fact]
         public void Withdraw_ThrowsException_WhenAmountIsNegative()
         {
@@ -67,6 +72,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Throws<ArgumentException>(() => account.Withdraw(-20m));
         }
 
+        // Tests that withdrawing zero throws an exception
         [Fact]
         public void Withdraw_ThrowsException_WhenAmountIsZero()
         {
@@ -77,6 +83,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Throws<ArgumentException>(() => account.Withdraw(0m));
         }
 
+        // Tests that depositing zero throws an exception
         [Fact]
         public void Deposit_ThrowsException_WhenAmountIsZero()
         {

@@ -2,6 +2,7 @@
 
 public static class StringProcessor
 {
+    // Converts the input string to lowercase
     public static string ToLowerCase(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
@@ -12,6 +13,7 @@ public static class StringProcessor
         return input.ToLower();
     }
 
+    // Removes all non-alphanumeric characters from the input string
     public static string Sanitize(string input)
     {
         if (input == null)
@@ -19,7 +21,7 @@ public static class StringProcessor
             throw new ArgumentNullException(nameof(input), "Input cannot be null.");
         }
 
-        // If the input is empty, return it as-is
+        // Return the input as-is if it's an empty string
         if (input == string.Empty)
         {
             return input;
@@ -28,25 +30,27 @@ public static class StringProcessor
         return Regex.Replace(input, "[^a-zA-Z0-9]", string.Empty);
     }
 
+    // Compares two strings for equality after sanitizing and converting to lowercase
     public static bool AreEqual(string input1, string input2)
     {
-        // Handle cases where both inputs are null
+        // Return true if both inputs are null
         if (input1 == null && input2 == null)
         {
             return true;
         }
 
-        // If only one of the inputs is null, they are not equal
+        // Return false if only one input is null
         if (input1 == null || input2 == null)
         {
             return false;
         }
 
-        // Sanitize and compare the lowercased strings
+        // Sanitize and compare the lowercased versions of the strings
         string sanitized1 = Sanitize(input1).ToLower();
         string sanitized2 = Sanitize(input2).ToLower();
 
         return sanitized1 == sanitized2;
     }
 }
+
 

@@ -6,10 +6,13 @@ namespace TDD_Assignment_Abbe.Classes
 {
     public class BookingSystem
     {
+        // Stores a list of bookings
         private readonly List<Booking> _bookings = new List<Booking>();
 
+        // Provides a read-only view of the bookings
         public IEnumerable<Booking> Bookings => _bookings.AsReadOnly();
 
+        // Books a time slot if it doesn't overlap with existing bookings
         public bool BookTimeSlot(DateTime startTime, DateTime endTime)
         {
             if (startTime >= endTime)
@@ -24,6 +27,7 @@ namespace TDD_Assignment_Abbe.Classes
             return true;
         }
 
+        // Retrieves available time slots within a specified range
         public List<DateTime> GetAvailableTimeSlots(DateTime dayStart, DateTime dayEnd)
         {
             var availableSlots = new List<DateTime>();
@@ -40,7 +44,10 @@ namespace TDD_Assignment_Abbe.Classes
 
     public class Booking
     {
+        // Start time of the booking
         public DateTime Start { get; set; }
+
+        // End time of the booking
         public DateTime End { get; set; }
     }
 }

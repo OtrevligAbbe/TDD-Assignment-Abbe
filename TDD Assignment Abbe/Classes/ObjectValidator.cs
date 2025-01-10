@@ -4,13 +4,13 @@ using System.Reflection;
 
 public class ObjectValidator
 {
-    // Method to check if an object is null
+    // Checks if the given object is null
     public bool IsNull(object obj)
     {
         return obj == null;
     }
 
-    // Method to get a list of property names that are null in the given object
+    // Returns a list of property names that are null in the specified object
     public List<string> GetNullProperties(object obj)
     {
         if (obj == null)
@@ -20,10 +20,10 @@ public class ObjectValidator
 
         List<string> nullProperties = new List<string>();
 
-        // Loop through all public properties of the object
+        // Iterate through all public instance properties of the object
         foreach (PropertyInfo property in obj.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
-            // Check if the property value is null
+            // Add property name to the list if its value is null
             if (property.GetValue(obj) == null)
             {
                 nullProperties.Add(property.Name);
@@ -33,3 +33,4 @@ public class ObjectValidator
         return nullProperties;
     }
 }
+

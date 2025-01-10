@@ -6,6 +6,7 @@ namespace TDD_Assignment_Abbe
 {
     public class StringProcessorTest
     {
+        // Tests that ToLowerCase converts a string to lowercase
         [Fact]
         public void ToLowerCase_ConvertsStringToLowerCase()
         {
@@ -20,6 +21,7 @@ namespace TDD_Assignment_Abbe
             Assert.Equal(expected, result);
         }
 
+        // Tests that ToLowerCase throws an exception when the input is null
         [Fact]
         public void ToLowerCase_ThrowsArgumentNullException_WhenInputIsNull()
         {
@@ -30,6 +32,7 @@ namespace TDD_Assignment_Abbe
             Assert.Throws<ArgumentNullException>(() => StringProcessor.ToLowerCase(input));
         }
 
+        // Tests that Sanitize removes special characters from a string
         [Fact]
         public void Sanitize_RemovesSpecialCharacters()
         {
@@ -44,6 +47,7 @@ namespace TDD_Assignment_Abbe
             Assert.Equal(expected, result);
         }
 
+        // Tests that Sanitize returns an empty string when the input is empty
         [Fact]
         public void Sanitize_ReturnsEmpty_WhenInputIsEmpty()
         {
@@ -58,6 +62,7 @@ namespace TDD_Assignment_Abbe
             Assert.Equal(expected, result);
         }
 
+        // Tests that Sanitize throws an exception when the input is null
         [Fact]
         public void Sanitize_ThrowsArgumentNullException_WhenInputIsNull()
         {
@@ -68,6 +73,7 @@ namespace TDD_Assignment_Abbe
             Assert.Throws<ArgumentNullException>(() => StringProcessor.Sanitize(input));
         }
 
+        // Tests that AreEqual returns true when both strings are null
         [Fact]
         public void AreEqual_ReturnsTrue_WhenBothStringsAreNull()
         {
@@ -82,6 +88,7 @@ namespace TDD_Assignment_Abbe
             Assert.True(result);
         }
 
+        // Tests that AreEqual returns true when both strings are empty
         [Fact]
         public void AreEqual_ReturnsTrue_WhenBothStringsAreEmpty()
         {
@@ -96,6 +103,7 @@ namespace TDD_Assignment_Abbe
             Assert.True(result);
         }
 
+        // Tests that AreEqual returns false when one string is null
         [Fact]
         public void AreEqual_ReturnsFalse_WhenOneStringIsNull()
         {
@@ -110,6 +118,7 @@ namespace TDD_Assignment_Abbe
             Assert.False(result);
         }
 
+        // Tests that AreEqual returns false when the strings do not match
         [Fact]
         public void AreEqual_ReturnsFalse_WhenStringsDoNotMatch()
         {
@@ -124,6 +133,7 @@ namespace TDD_Assignment_Abbe
             Assert.False(result);
         }
 
+        // Tests that AreEqual returns true when the strings match after sanitization and conversion to lowercase
         [Fact]
         public void AreEqual_ReturnsTrue_WhenStringsMatchAfterSanitizationAndLowerCase()
         {

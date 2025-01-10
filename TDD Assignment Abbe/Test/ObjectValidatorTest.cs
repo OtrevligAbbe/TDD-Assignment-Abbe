@@ -8,6 +8,7 @@ namespace TDD_Assignment_Abbe.Test
     {
         private readonly ObjectValidator _validator = new ObjectValidator();
 
+        // Tests that IsNull returns true for a null object
         [Fact]
         public void IsNull_ReturnsTrue_WhenObjectIsNull()
         {
@@ -21,6 +22,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.True(result);
         }
 
+        // Tests that IsNull returns false for a non-null object
         [Fact]
         public void IsNull_ReturnsFalse_WhenObjectIsNotNull()
         {
@@ -34,6 +36,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.False(result);
         }
 
+        // Tests that GetNullProperties returns an empty list when no properties are null
         [Fact]
         public void GetNullProperties_ReturnsEmptyList_WhenNoPropertiesAreNull()
         {
@@ -47,6 +50,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Empty(result);
         }
 
+        // Tests that GetNullProperties returns a list of property names that are null
         [Fact]
         public void GetNullProperties_ReturnsListOfNullProperties_WhenSomePropertiesAreNull()
         {
@@ -61,6 +65,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.DoesNotContain("Age", result);
         }
 
+        // Tests that GetNullProperties throws an exception when the object is null
         [Fact]
         public void GetNullProperties_ThrowsArgumentNullException_WhenObjectIsNull()
         {

@@ -4,16 +4,13 @@ namespace TDD_Assignment_Abbe.Classes
 {
     public class BankAccount
     {
-        // Privat fält för att hålla saldot
+        // Holds the current account balance
         private decimal _balance;
 
-        // Publik egenskap för att läsa saldot
-        public decimal Balance
-        {
-            get { return _balance; }
-        }
+        // Property to get the current balance
+        public decimal Balance => _balance;
 
-        // Metod för att sätta in pengar
+        // Adds the specified amount to the balance
         public void Deposit(decimal amount)
         {
             if (amount <= 0)
@@ -24,7 +21,7 @@ namespace TDD_Assignment_Abbe.Classes
             _balance += amount;
         }
 
-        // Metod för att ta ut pengar
+        // Deducts the specified amount from the balance
         public void Withdraw(decimal amount)
         {
             if (amount <= 0)
@@ -41,3 +38,4 @@ namespace TDD_Assignment_Abbe.Classes
         }
     }
 }
+

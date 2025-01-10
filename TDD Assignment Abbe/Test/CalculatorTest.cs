@@ -4,9 +4,9 @@ using Xunit;
 
 namespace TDD_Assignment_Abbe.Test
 {
-
     public class CalculatorTests
     {
+        // Tests that Add returns the correct sum
         [Fact]
         public void Add_ReturnsCorrectSum()
         {
@@ -21,6 +21,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Equal(10.0f, result);
         }
 
+        // Tests that Subtract returns the correct difference
         [Fact]
         public void Subtract_ReturnsCorrectDifference()
         {
@@ -35,6 +36,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Equal(5.5f, result);
         }
 
+        // Tests that Multiply returns the correct product
         [Fact]
         public void Multiply_ReturnsCorrectProduct()
         {
@@ -49,6 +51,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Equal(10.0f, result);
         }
 
+        // Tests that Divide returns the correct quotient
         [Fact]
         public void Divide_ReturnsCorrectQuotient()
         {
@@ -63,6 +66,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Equal(3.0f, result);
         }
 
+        // Tests that Divide throws a DivideByZeroException when dividing by zero
         [Fact]
         public void Divide_ThrowsDivideByZeroException_WhenDividingByZero()
         {
@@ -74,6 +78,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Throws<DivideByZeroException>(() => Calculator.Divide(a, b));
         }
 
+        // Tests that Add handles negative numbers correctly
         [Fact]
         public void Add_HandlesNegativeNumbersCorrectly()
         {
@@ -88,6 +93,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Equal(-8.0f, result);
         }
 
+        // Tests that Multiply handles large numbers correctly
         [Fact]
         public void Multiply_HandlesLargeNumbersCorrectly()
         {
@@ -102,6 +108,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.Equal(2_000_000.0f, result);
         }
 
+        // Tests that Divide handles decimal values correctly with precision
         [Fact]
         public void Divide_HandlesDecimalValuesCorrectly()
         {
@@ -113,7 +120,7 @@ namespace TDD_Assignment_Abbe.Test
             float result = Calculator.Divide(a, b);
 
             // Assert
-            Assert.Equal(2.75f, result, 2); // Tillåt två decimaler i precision
+            Assert.Equal(2.75f, result, 2); // Allows two decimal precision
         }
     }
 }

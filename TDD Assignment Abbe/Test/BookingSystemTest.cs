@@ -8,11 +8,13 @@ namespace TDD_Assignment_Abbe.Test
     {
         private readonly BookingSystem _bookingSystem;
 
+        // Initializes a new BookingSystem instance for each test
         public BookingSystemTest()
         {
             _bookingSystem = new BookingSystem();
         }
 
+        // Tests that booking a time slot returns true when the slot is available
         [Fact]
         public void BookTimeSlot_ReturnsTrue_WhenSlotIsAvailable()
         {
@@ -20,6 +22,7 @@ namespace TDD_Assignment_Abbe.Test
             Assert.True(result);
         }
 
+        // Tests that booking a time slot returns false when the slot is already taken
         [Fact]
         public void BookTimeSlot_ReturnsFalse_WhenSlotIsNotAvailable()
         {
@@ -28,12 +31,14 @@ namespace TDD_Assignment_Abbe.Test
             Assert.False(result);
         }
 
+        // Tests that booking a time slot throws an exception when the start time is after the end time
         [Fact]
         public void BookTimeSlot_ThrowsArgumentException_WhenStartTimeIsAfterEndTime()
         {
             Assert.Throws<ArgumentException>(() => _bookingSystem.BookTimeSlot(DateTime.Now.AddHours(2), DateTime.Now.AddHours(1)));
         }
 
+        // Tests that GetAvailableTimeSlots returns the correct available slots
         [Fact]
         public void GetAvailableTimeSlots_ReturnsCorrectSlots()
         {
