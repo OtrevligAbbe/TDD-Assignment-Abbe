@@ -4,7 +4,7 @@ using TDD_Assignment_Abbe.Classes;
 using TDD_Assignment_Abbe.Facade;
 using Xunit;
 
-namespace TDD_Assignment_Abbe.Test.Facade
+namespace TDD_Assignment_Abbe.Test
 {
     public class BookingSystemFacadeTest
     {
