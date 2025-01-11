@@ -73,7 +73,7 @@ Welcome to the **TDD Assignment Abbe** repository! This project demonstrates the
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/username/TDD-Assignment-Abbe.git
+   git clone https://github.com/OtrevligAbbe/TDD-Assignment-Abbe
    ```
 2. **Open the solution** in Visual Studio.
 3. **Build the solution** to restore dependencies.
