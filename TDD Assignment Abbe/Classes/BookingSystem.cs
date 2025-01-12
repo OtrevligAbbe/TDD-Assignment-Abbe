@@ -6,49 +6,53 @@ namespace TDD_Assignment_Abbe.Classes
 {
     public class BookingSystem
     {
-        // Stores a list of bookings
-        private readonly List<Booking> _bookings = new List<Booking>();
+        private readonly List<Booking> bookings = new List<Booking>();
 
-        // Provides a read-only view of the bookings
-        public IEnumerable<Booking> Bookings => _bookings.AsReadOnly();
-
-        // Books a time slot if it doesn't overlap with existing bookings
-        public bool BookTimeSlot(DateTime startTime, DateTime endTime)
+        // Books a time slot if it's available.
+        public virtual bool BookTimeSlot(DateTime startTime, DateTime endTime)
         {
             if (startTime >= endTime)
-                throw new ArgumentException("Start time must be earlier than end time.");
+                throw new ArgumentException("Invalid time range.");
 
-            if (_bookings.Any(b => b.Start < endTime && b.End > startTime))
-            {
-                return false; // Time slot is not available
-            }
+            // Check for overlapping bookings
+            if (bookings.Any(b => b.Start < endTime && b.End > startTime))
+                return false;
 
-            _bookings.Add(new Booking { Start = startTime, End = endTime });
+            // Add the new booking
+            bookings.Add(new Booking { Start = startTime, End = endTime });
             return true;
         }
 
-        // Retrieves available time slots within a specified range
-        public List<DateTime> GetAvailableTimeSlots(DateTime dayStart, DateTime dayEnd)
+        // Returns available time slots in the given range.
+        public virtual IEnumerable<(DateTime Start, DateTime End)> GetAvailableTimeSlots(DateTime dayStart, DateTime dayEnd)
         {
-            var availableSlots = new List<DateTime>();
-            for (var currentTime = dayStart; currentTime < dayEnd; currentTime = currentTime.AddMinutes(30))
+            if (dayStart >= dayEnd)
+                throw new ArgumentException("Invalid day range.");
+
+            var availableSlots = new List<(DateTime Start, DateTime End)>();
+            var currentTime = dayStart;
+
+            // Find gaps between bookings
+            foreach (var booking in bookings.OrderBy(b => b.Start))
             {
-                if (!_bookings.Any(booking => booking.Start <= currentTime && booking.End > currentTime))
-                {
-                    availableSlots.Add(currentTime);
-                }
+                if (booking.Start > currentTime)
+                    availableSlots.Add((currentTime, booking.Start));
+                currentTime = Math.Max(currentTime.Ticks, booking.End.Ticks) == booking.End.Ticks ? booking.End : currentTime;
             }
+
+            // Add remaining time after last booking
+            if (currentTime < dayEnd)
+                availableSlots.Add((currentTime, dayEnd));
+
             return availableSlots;
         }
-    }
 
-    public class Booking
-    {
-        // Start time of the booking
-        public DateTime Start { get; set; }
-
-        // End time of the booking
-        public DateTime End { get; set; }
+        private class Booking
+        {
+            public DateTime Start { get; set; }
+            public DateTime End { get; set; }
+        }
     }
 }
+
 

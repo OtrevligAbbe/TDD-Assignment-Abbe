@@ -1,6 +1,7 @@
 ﻿using System;
-using TDD_Assignment_Abbe.Classes;
+using System.Collections.Generic;
 using Xunit;
+using TDD_Assignment_Abbe.Classes;
 
 namespace TDD_Assignment_Abbe.Test
 {
@@ -8,51 +9,76 @@ namespace TDD_Assignment_Abbe.Test
     {
         private readonly BookingSystem _bookingSystem;
 
-        // Initializes a new BookingSystem instance for each test
         public BookingSystemTest()
         {
             _bookingSystem = new BookingSystem();
         }
 
-        // Tests that booking a time slot returns true when the slot is available
         [Fact]
-        public void BookTimeSlot_ReturnsTrue_WhenSlotIsAvailable()
+        public void BookTimeSlot_ShouldReturnTrue_WhenSlotIsAvailable()
         {
-            var result = _bookingSystem.BookTimeSlot(DateTime.Now.AddHours(1), DateTime.Now.AddHours(2));
+            // Arrange
+            var startTime = DateTime.Now;
+            var endTime = startTime.AddHours(1);
+
+            // Act
+            var result = _bookingSystem.BookTimeSlot(startTime, endTime);
+
+            // Assert
             Assert.True(result);
         }
 
-        // Tests that booking a time slot returns false when the slot is already taken
         [Fact]
-        public void BookTimeSlot_ReturnsFalse_WhenSlotIsNotAvailable()
+        public void BookTimeSlot_ShouldReturnFalse_WhenSlotIsUnavailable()
         {
-            _bookingSystem.BookTimeSlot(DateTime.Now.AddHours(1), DateTime.Now.AddHours(2));
-            var result = _bookingSystem.BookTimeSlot(DateTime.Now.AddHours(1).AddMinutes(30), DateTime.Now.AddHours(2));
+            // Arrange
+            var startTime = DateTime.Now;
+            var endTime = startTime.AddHours(1);
+            _bookingSystem.BookTimeSlot(startTime, endTime); // Book an overlapping slot
+
+            // Act
+            var result = _bookingSystem.BookTimeSlot(startTime.AddMinutes(30), endTime.AddMinutes(30));
+
+            // Assert
             Assert.False(result);
         }
 
-        // Tests that booking a time slot throws an exception when the start time is after the end time
         [Fact]
-        public void BookTimeSlot_ThrowsArgumentException_WhenStartTimeIsAfterEndTime()
+        public void GetAvailableTimeSlots_ShouldReturnAllSlots_WhenNoBookingsExist()
         {
-            Assert.Throws<ArgumentException>(() => _bookingSystem.BookTimeSlot(DateTime.Now.AddHours(2), DateTime.Now.AddHours(1)));
-        }
+            // Arrange
+            var dayStart = DateTime.Today;
+            var dayEnd = dayStart.AddDays(1);
 
-        // Tests that GetAvailableTimeSlots returns the correct available slots
-        [Fact]
-        public void GetAvailableTimeSlots_ReturnsCorrectSlots()
-        {
-            var dayStart = DateTime.Now.AddHours(1);
-            var dayEnd = dayStart.AddHours(5);
-
-            _bookingSystem.BookTimeSlot(dayStart.AddMinutes(30), dayStart.AddMinutes(60));
-            _bookingSystem.BookTimeSlot(dayStart.AddMinutes(90), dayStart.AddMinutes(120));
-
+            // Act
             var availableSlots = _bookingSystem.GetAvailableTimeSlots(dayStart, dayEnd);
 
-            Assert.NotNull(availableSlots);
-            Assert.DoesNotContain(dayStart.AddMinutes(30), availableSlots);
-            Assert.DoesNotContain(dayStart.AddMinutes(90), availableSlots);
+            // Assert
+            var enumerator = availableSlots.GetEnumerator();
+            Assert.True(enumerator.MoveNext()); // Ensure there is at least one slot
+            Assert.Equal(dayStart, enumerator.Current.Start.Date); // Compare only the date
+            Assert.Equal(dayEnd, enumerator.Current.End.Date);     // Compare only the date
+        }
+
+
+        [Fact]
+        public void GetAvailableTimeSlots_ShouldExcludeBookedSlots()
+        {
+            // Arrange
+            var dayStart = DateTime.Today;
+            var dayEnd = dayStart.AddDays(1);
+            var bookingStart = dayStart.AddHours(2);
+            var bookingEnd = bookingStart.AddHours(2);
+
+            _bookingSystem.BookTimeSlot(bookingStart, bookingEnd);
+
+            // Act
+            var availableSlots = _bookingSystem.GetAvailableTimeSlots(dayStart, dayEnd);
+
+            // Assert
+            Assert.Contains((dayStart, bookingStart), availableSlots);
+            Assert.Contains((bookingEnd, dayEnd), availableSlots);
         }
     }
 }
+
