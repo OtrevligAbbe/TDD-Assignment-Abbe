@@ -1,35 +1,38 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
+using TDD_Assignment_Abbe.Interfaces;
 
-public class WeatherClient
+namespace TDD_Assignment_Abbe.Classes
 {
-    private readonly HttpClient _httpClient;
-
-    // Initializes the WeatherClient with an HttpClient instance
-    public WeatherClient(HttpClient httpClient)
+    /// Real implementation that fetches weather data using HttpClient.
+    public class WeatherClient : IWeatherClient
     {
-        _httpClient = httpClient;
-    }
+        private readonly HttpClient _httpClient;
 
-    // Fetches the current weather for the specified city
-    public async Task<string> GetCurrentWeatherAsync(string city)
-    {
-        if (string.IsNullOrWhiteSpace(city))
+        public WeatherClient(HttpClient httpClient)
         {
-            throw new ArgumentException("City name cannot be null or empty", nameof(city));
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        // Sends a GET request to the weather API
-        var response = await _httpClient.GetAsync($"https://api.weather.com/v3/weather/{city}");
-
-        // Throws an exception if the response indicates a failure
-        if (!response.IsSuccessStatusCode)
+        public async Task<string> GetCurrentWeatherAsync(string city)
         {
-            throw new HttpRequestException("Failed to fetch weather data.");
-        }
+            if (string.IsNullOrWhiteSpace(city))
+                throw new ArgumentException("City name cannot be null or empty.", nameof(city));
 
-        // Returns the response content as a string
-        return await response.Content.ReadAsStringAsync();
+            // For example: if BaseAddress = "https://api.mockweather.com", 
+            // this request becomes GET https://api.mockweather.com/weather/{city}
+            var response = await _httpClient.GetAsync($"/weather/{city}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new HttpRequestException(
+                    $"Could not fetch weather for '{city}'. Status: {response.StatusCode}");
+            }
+
+            return await response.Content.ReadAsStringAsync();
+        }
     }
 }
+
+
 

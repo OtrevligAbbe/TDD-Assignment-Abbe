@@ -1,83 +1,62 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using TDD_Assignment_Abbe.Classes;
 
 namespace TDD_Assignment_Abbe.Test
 {
+    // Tests the real BookingSystem
     public class BookingSystemTest
     {
-        private readonly BookingSystem _bookingSystem;
-
-        public BookingSystemTest()
-        {
-            _bookingSystem = new BookingSystem();
-        }
-
         [Fact]
-        public void BookTimeSlot_ShouldReturnTrue_WhenSlotIsAvailable()
+        public void BookTimeSlot_ShouldReturnTrue_WhenSlotIsFree()
         {
-            // Arrange
-            var startTime = DateTime.Now;
-            var endTime = startTime.AddHours(1);
+            var system = new BookingSystem();
+            var start = new DateTime(2025, 1, 21, 10, 0, 0);
+            var end = new DateTime(2025, 1, 21, 11, 0, 0);
 
-            // Act
-            var result = _bookingSystem.BookTimeSlot(startTime, endTime);
-
-            // Assert
+            var result = system.BookTimeSlot(start, end);
             Assert.True(result);
         }
 
         [Fact]
-        public void BookTimeSlot_ShouldReturnFalse_WhenSlotIsUnavailable()
+        public void BookTimeSlot_ShouldReturnFalse_WhenOverlaps()
         {
-            // Arrange
-            var startTime = DateTime.Now;
-            var endTime = startTime.AddHours(1);
-            _bookingSystem.BookTimeSlot(startTime, endTime); // Book an overlapping slot
+            var system = new BookingSystem();
+            system.BookTimeSlot(
+                new DateTime(2025, 1, 21, 10, 0, 0),
+                new DateTime(2025, 1, 21, 11, 0, 0)
+            );
 
-            // Act
-            var result = _bookingSystem.BookTimeSlot(startTime.AddMinutes(30), endTime.AddMinutes(30));
+            var result = system.BookTimeSlot(
+                new DateTime(2025, 1, 21, 10, 30, 0),
+                new DateTime(2025, 1, 21, 10, 45, 0)
+            );
 
-            // Assert
             Assert.False(result);
         }
 
         [Fact]
-        public void GetAvailableTimeSlots_ShouldReturnAllSlots_WhenNoBookingsExist()
+        public void GetAvailableTimeSlots_ShouldExcludeBooked()
         {
-            // Arrange
-            var dayStart = DateTime.Today;
-            var dayEnd = dayStart.AddDays(1);
+            var system = new BookingSystem();
+            var dayStart = new DateTime(2025, 1, 21, 8, 0, 0);
+            var dayEnd = new DateTime(2025, 1, 21, 12, 0, 0);
 
-            // Act
-            var availableSlots = _bookingSystem.GetAvailableTimeSlots(dayStart, dayEnd);
+            system.BookTimeSlot(
+                new DateTime(2025, 1, 21, 9, 0, 0),
+                new DateTime(2025, 1, 21, 10, 0, 0)
+            );
+            system.BookTimeSlot(
+                new DateTime(2025, 1, 21, 10, 30, 0),
+                new DateTime(2025, 1, 21, 11, 0, 0)
+            );
 
-            // Assert
-            var enumerator = availableSlots.GetEnumerator();
-            Assert.True(enumerator.MoveNext()); // Ensure there is at least one slot
-            Assert.Equal(dayStart, enumerator.Current.Start.Date); // Compare only the date
-            Assert.Equal(dayEnd, enumerator.Current.End.Date);     // Compare only the date
-        }
+            var slots = system.GetAvailableTimeSlots(dayStart, dayEnd).ToList();
 
-
-        [Fact]
-        public void GetAvailableTimeSlots_ShouldExcludeBookedSlots()
-        {
-            // Arrange
-            var dayStart = DateTime.Today;
-            var dayEnd = dayStart.AddDays(1);
-            var bookingStart = dayStart.AddHours(2);
-            var bookingEnd = bookingStart.AddHours(2);
-
-            _bookingSystem.BookTimeSlot(bookingStart, bookingEnd);
-
-            // Act
-            var availableSlots = _bookingSystem.GetAvailableTimeSlots(dayStart, dayEnd);
-
-            // Assert
-            Assert.Contains((dayStart, bookingStart), availableSlots);
-            Assert.Contains((bookingEnd, dayEnd), availableSlots);
+            Assert.Contains(slots, s => s.Start == dayStart && s.End == new DateTime(2025, 1, 21, 9, 0, 0));
+            Assert.Contains(slots, s => s.Start == new DateTime(2025, 1, 21, 10, 0, 0) && s.End == new DateTime(2025, 1, 21, 10, 30, 0));
+            Assert.Contains(slots, s => s.Start == new DateTime(2025, 1, 21, 11, 0, 0) && s.End == dayEnd);
         }
     }
 }

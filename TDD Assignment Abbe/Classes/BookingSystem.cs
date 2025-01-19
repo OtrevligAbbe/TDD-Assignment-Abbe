@@ -1,50 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TDD_Assignment_Abbe.Interfaces;
 
 namespace TDD_Assignment_Abbe.Classes
 {
-    public class BookingSystem
+    // Real booking system implementation
+    public class BookingSystem : IBookingSystem
     {
-        private readonly List<Booking> bookings = new List<Booking>();
+        private readonly List<Booking> _bookings = new List<Booking>();
 
-        // Books a time slot if it's available.
-        public virtual bool BookTimeSlot(DateTime startTime, DateTime endTime)
+        // Books a slot if no overlap
+        public bool BookTimeSlot(DateTime startTime, DateTime endTime)
         {
             if (startTime >= endTime)
-                throw new ArgumentException("Invalid time range.");
+                throw new ArgumentException("Invalid range.");
 
-            // Check for overlapping bookings
-            if (bookings.Any(b => b.Start < endTime && b.End > startTime))
-                return false;
+            bool overlaps = _bookings.Any(b => startTime < b.End && endTime > b.Start);
+            if (overlaps) return false;
 
-            // Add the new booking
-            bookings.Add(new Booking { Start = startTime, End = endTime });
+            _bookings.Add(new Booking { Start = startTime, End = endTime });
             return true;
         }
 
-        // Returns available time slots in the given range.
-        public virtual IEnumerable<(DateTime Start, DateTime End)> GetAvailableTimeSlots(DateTime dayStart, DateTime dayEnd)
+        // Returns free slots in the range
+        public IEnumerable<(DateTime Start, DateTime End)> GetAvailableTimeSlots(DateTime dayStart, DateTime dayEnd)
         {
-            if (dayStart >= dayEnd)
-                throw new ArgumentException("Invalid day range.");
+            var freeSlots = new List<(DateTime Start, DateTime End)>();
+            DateTime current = dayStart;
 
-            var availableSlots = new List<(DateTime Start, DateTime End)>();
-            var currentTime = dayStart;
+            var sorted = _bookings
+                .Where(b => b.End > dayStart && b.Start < dayEnd)
+                .OrderBy(b => b.Start)
+                .ToList();
 
-            // Find gaps between bookings
-            foreach (var booking in bookings.OrderBy(b => b.Start))
+            foreach (var b in sorted)
             {
-                if (booking.Start > currentTime)
-                    availableSlots.Add((currentTime, booking.Start));
-                currentTime = Math.Max(currentTime.Ticks, booking.End.Ticks) == booking.End.Ticks ? booking.End : currentTime;
+                if (current < b.Start)
+                    freeSlots.Add((current, b.Start));
+                current = (b.End > current) ? b.End : current;
             }
 
-            // Add remaining time after last booking
-            if (currentTime < dayEnd)
-                availableSlots.Add((currentTime, dayEnd));
+            if (current < dayEnd)
+                freeSlots.Add((current, dayEnd));
 
-            return availableSlots;
+            return freeSlots;
         }
 
         private class Booking

@@ -3,8 +3,6 @@
 
 Welcome to the **TDD Assignment Abbe** repository! This project demonstrates the principles of **Test-Driven Development (TDD)** with a focus on various functionalities like inventory management, string processing, banking operations, and booking systems.
 
----
-
 ## Features ✨
 
 ### Inventory Management
@@ -27,19 +25,17 @@ Welcome to the **TDD Assignment Abbe** repository! This project demonstrates the
 - Manage bookings with available time slots.
 - Includes:
   - **BookingSystem**: Core logic for booking operations.
-  - **BookingServiceFacade**: Simplified interface for managing bookings.
-  - Tests implemented using **xUnit**.
-
----
+  - **BookingSystemFacade**: Simplified interface for managing bookings.
+  - Tests implemented using **xUnit** and **NSubstitute**.
 
 ## Technology Stack 🛠️
+
 - **C#**: The programming language.
 - **xUnit**: Testing framework.
-- **Moq**: For mocking dependencies in tests.
-
----
+- **NSubstitute**: For mocking dependencies in tests.
 
 ## Folder Structure 📂
+
 ```plaintext
 .
 ├── Classes
@@ -49,10 +45,13 @@ Welcome to the **TDD Assignment Abbe** repository! This project demonstrates the
 │   ├── InventoryManager.cs
 │   ├── ObjectValidator.cs
 │   ├── StringProcessor.cs
-│   ├── WeatherClient.cs
+│   └── WeatherClient.cs
 ├── Facade
 │   ├── BookingSystemFacade.cs
 │   └── WeatherClientFacade.cs
+├── Interfaces
+│   ├── IBookingSystem.cs
+│   └── IWeatherClient.cs
 ├── Test
 │   ├── BankAccountTest.cs
 │   ├── BookingSystemTest.cs
@@ -61,13 +60,11 @@ Welcome to the **TDD Assignment Abbe** repository! This project demonstrates the
 │   ├── InventoryManagerTest.cs
 │   ├── ObjectValidatorTest.cs
 │   ├── StringProcessorTest.cs
-│   └── WeatherClientTest.cs
-├── TestHelpers
-│   └── MockHttpMessageHandler.cs
-└── README.md
+│   ├── WeatherClientTest.cs
+│   └── WeatherClientFacadeTest.cs
+└── TestHelpers
+    └── MockHttpMessageHandler.cs
 ```
-
----
 
 ## How to Run 🚀
 
@@ -79,17 +76,13 @@ Welcome to the **TDD Assignment Abbe** repository! This project demonstrates the
 3. **Build the solution** to restore dependencies.
 4. **Run all tests** using the Test Explorer.
 
----
-
 ## Tests 🧪
 
 - Tests are written for all major components using **xUnit**.
-- Includes **mocking** for external dependencies.
+- Mocking is done with **NSubstitute** to isolate dependencies.
 - To run tests:
   1. Open the Test Explorer in Visual Studio.
   2. Run all tests.
-
----
 
 ## License 📜
 

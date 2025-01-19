@@ -3,20 +3,25 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-// A mock HTTP message handler for simulating HTTP responses
-public class MockHttpMessageHandler : HttpMessageHandler
+namespace TDD_Assignment_Abbe.Test.TestHelpers
 {
-    private readonly Func<HttpRequestMessage, HttpResponseMessage> _handler;
-
-    // Constructor accepts a function to handle HTTP requests and return mock responses
-    public MockHttpMessageHandler(Func<HttpRequestMessage, HttpResponseMessage> handler)
+    /// Lets you define a function to handle any incoming HttpRequest 
+    /// and generate the desired HttpResponse.
+    public class MockHttpMessageHandler : HttpMessageHandler
     {
-        _handler = handler;
-    }
+        private readonly Func<HttpRequestMessage, HttpResponseMessage> _handlerFunc;
 
-    // Overrides SendAsync to return a mock HTTP response based on the provided handler function
-    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-    {
-        return Task.FromResult(_handler(request));
+        public MockHttpMessageHandler(Func<HttpRequestMessage, HttpResponseMessage> handlerFunc)
+        {
+            _handlerFunc = handlerFunc;
+        }
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var response = _handlerFunc(request);
+            return Task.FromResult(response);
+        }
     }
 }

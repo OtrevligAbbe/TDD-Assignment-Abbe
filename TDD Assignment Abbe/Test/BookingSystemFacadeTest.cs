@@ -1,83 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
-using Moq;
+using NSubstitute;
 using Xunit;
-using TDD_Assignment_Abbe.Classes;
 using TDD_Assignment_Abbe.Facade;
+using TDD_Assignment_Abbe.Interfaces;
 
 namespace TDD_Assignment_Abbe.Test
 {
+    // Tests BookingSystemFacade with NSubstitute
     public class BookingSystemFacadeTest
     {
-        private readonly Mock<BookingSystem> _mockBookingSystem;
-        private readonly BookingSystemFacade _facade;
-
-        public BookingSystemFacadeTest()
-        {
-            _mockBookingSystem = new Mock<BookingSystem>();
-            _facade = new BookingSystemFacade(_mockBookingSystem.Object);
-        }
-
         [Fact]
-        public void BookTimeSlot_ShouldReturnTrue_WhenSlotIsAvailable()
+        public void BookTimeSlot_ShouldCallIBookingSystem()
         {
-            // Arrange
-            var startTime = DateTime.Now;
-            var endTime = startTime.AddHours(1);
+            var mockSystem = Substitute.For<IBookingSystem>();
+            var facade = new BookingSystemFacade(mockSystem);
 
-            _mockBookingSystem
-                .Setup(bs => bs.BookTimeSlot(startTime, endTime))
-                .Returns(true);
+            var start = new DateTime(2025, 1, 21, 10, 0, 0);
+            var end = new DateTime(2025, 1, 21, 11, 0, 0);
 
-            // Act
-            var result = _facade.BookTimeSlot(startTime, endTime);
+            mockSystem.BookTimeSlot(start, end).Returns(true);
 
-            // Assert
+            var result = facade.BookTimeSlot(start, end);
             Assert.True(result);
-            _mockBookingSystem.Verify(bs => bs.BookTimeSlot(startTime, endTime), Times.Once);
+
+            mockSystem.Received(1).BookTimeSlot(start, end);
         }
 
         [Fact]
-        public void BookTimeSlot_ShouldReturnFalse_WhenSlotIsUnavailable()
+        public void GetAvailableTimeSlots_ShouldReturnMockedSlots()
         {
-            // Arrange
-            var startTime = DateTime.Now;
-            var endTime = startTime.AddHours(1);
+            var mockSystem = Substitute.For<IBookingSystem>();
+            var facade = new BookingSystemFacade(mockSystem);
 
-            _mockBookingSystem
-                .Setup(bs => bs.BookTimeSlot(startTime, endTime))
-                .Returns(false);
+            var dayStart = new DateTime(2025, 1, 21, 8, 0, 0);
+            var dayEnd = new DateTime(2025, 1, 21, 12, 0, 0);
 
-            // Act
-            var result = _facade.BookTimeSlot(startTime, endTime);
-
-            // Assert
-            Assert.False(result);
-            _mockBookingSystem.Verify(bs => bs.BookTimeSlot(startTime, endTime), Times.Once);
-        }
-
-        [Fact]
-        public void GetAvailableTimeSlots_ShouldReturnCorrectSlots()
-        {
-            // Arrange
-            var dayStart = DateTime.Today;
-            var dayEnd = dayStart.AddDays(1);
-            var expectedSlots = new List<(DateTime Start, DateTime End)>
+            var expected = new List<(DateTime Start, DateTime End)>
             {
-                (dayStart, dayStart.AddHours(2)),
-                (dayStart.AddHours(3), dayEnd)
+                (dayStart, new DateTime(2025, 1, 21, 9, 0, 0))
             };
 
-            _mockBookingSystem
-                .Setup(bs => bs.GetAvailableTimeSlots(dayStart, dayEnd))
-                .Returns(expectedSlots);
+            mockSystem.GetAvailableTimeSlots(dayStart, dayEnd).Returns(expected);
 
-            // Act
-            var result = _facade.GetAvailableTimeSlots(dayStart, dayEnd);
+            var slots = facade.GetAvailableTimeSlots(dayStart, dayEnd);
+            Assert.Equal(expected, slots);
+        }
 
-            // Assert
-            Assert.Equal(expectedSlots, result);
-            _mockBookingSystem.Verify(bs => bs.GetAvailableTimeSlots(dayStart, dayEnd), Times.Once);
+        [Fact]
+        public void BookTimeSlot_ShouldThrow_WhenSystemThrows()
+        {
+            var mockSystem = Substitute.For<IBookingSystem>();
+            var facade = new BookingSystemFacade(mockSystem);
+
+            mockSystem
+                .When(x => x.BookTimeSlot(Arg.Any<DateTime>(), Arg.Any<DateTime>()))
+                .Do(_ => throw new ArgumentException("Invalid range."));
+
+            Assert.Throws<ArgumentException>(() =>
+                facade.BookTimeSlot(DateTime.Now, DateTime.Now));
         }
     }
 }

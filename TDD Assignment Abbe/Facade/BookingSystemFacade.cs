@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using TDD_Assignment_Abbe.Classes;
+using TDD_Assignment_Abbe.Interfaces;
 
 namespace TDD_Assignment_Abbe.Facade
 {
+    // Facade for IBookingSystem
     public class BookingSystemFacade
     {
-        private readonly BookingSystem _bookingSystem;
+        private readonly IBookingSystem _bookingSystem;
 
-        // Initializes the facade with a BookingSystem instance.
-        public BookingSystemFacade(BookingSystem bookingSystem)
+        // Injects a booking system
+        public BookingSystemFacade(IBookingSystem bookingSystem)
         {
             _bookingSystem = bookingSystem ?? throw new ArgumentNullException(nameof(bookingSystem));
         }
 
-        // Books a time slot using the underlying BookingSystem.
+        // Books a time slot
         public bool BookTimeSlot(DateTime startTime, DateTime endTime)
         {
             return _bookingSystem.BookTimeSlot(startTime, endTime);
         }
 
-        // Retrieves available time slots within the specified range.
+        // Gets available slots in a range
         public IEnumerable<(DateTime Start, DateTime End)> GetAvailableTimeSlots(DateTime dayStart, DateTime dayEnd)
         {
             return _bookingSystem.GetAvailableTimeSlots(dayStart, dayEnd);

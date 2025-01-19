@@ -1,65 +1,80 @@
-﻿using TDD_Assignment_Abbe.Classes;
-using TDD_Assignment_Abbe.Facade;
-using NSubstitute;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using System.Net;
+using TDD_Assignment_Abbe.Classes;
+using TDD_Assignment_Abbe.Interfaces;
+using TDD_Assignment_Abbe.Test.TestHelpers;
 
 namespace TDD_Assignment_Abbe.Test
 {
-    public class WeatherClientTests
+    public class WeatherClientTest
     {
-        // Tests that GetCurrentWeatherAsync returns the correct data when the API responds successfully
         [Fact]
-        public async Task GetCurrentWeatherAsync_ReturnsCorrectData()
+        public async Task GetCurrentWeatherAsync_ReturnsSunny_WhenApiReturnsOk()
         {
             // Arrange
-            var mockHandler = new MockHttpMessageHandler(request =>
+            var mockHandler = new MockHttpMessageHandler((request) =>
             {
-                return new HttpResponseMessage
+                // We simulate a 200 OK with "Sunny" content
+                return new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent("{\"weather\": \"Sunny\"}")
+                    Content = new StringContent("Sunny")
                 };
             });
 
-            var client = new HttpClient(mockHandler)
+            var httpClient = new HttpClient(mockHandler)
             {
-                BaseAddress = new Uri("https://api.weather.com")
+                BaseAddress = new Uri("https://api.mockweather.com")
             };
 
-            var weatherClient = new WeatherClient(client);
+            IWeatherClient client = new WeatherClient(httpClient);
 
             // Act
-            var result = await weatherClient.GetCurrentWeatherAsync("Stockholm");
+            var result = await client.GetCurrentWeatherAsync("Stockholm");
 
             // Assert
-            Assert.Contains("Sunny", result);
+            Assert.Equal("Sunny", result);
         }
 
-        // Tests that GetCurrentWeatherAsync throws an HttpRequestException when the API responds with an error
         [Fact]
-        public async Task GetCurrentWeatherAsync_ThrowsHttpRequestException_OnInvalidResponse()
+        public async Task GetCurrentWeatherAsync_ThrowsArgumentException_WhenCityIsNullOrWhitespace()
         {
             // Arrange
-            var mockHandler = new MockHttpMessageHandler(request =>
+            var mockHandler = new MockHttpMessageHandler(_ =>
+                new HttpResponseMessage(HttpStatusCode.OK));
+            var httpClient = new HttpClient(mockHandler);
+
+            IWeatherClient client = new WeatherClient(httpClient);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ArgumentException>(() => client.GetCurrentWeatherAsync(null));
+            await Assert.ThrowsAsync<ArgumentException>(() => client.GetCurrentWeatherAsync(""));
+        }
+
+        [Fact]
+        public async Task GetCurrentWeatherAsync_ThrowsHttpRequestException_WhenApiReturnsError()
+        {
+            // Arrange
+            var mockHandler = new MockHttpMessageHandler((request) =>
             {
-                return new HttpResponseMessage
+                // Simulate a 400 Bad Request
+                return new HttpResponseMessage(HttpStatusCode.BadRequest)
                 {
-                    StatusCode = HttpStatusCode.BadRequest
+                    Content = new StringContent("Bad Request")
                 };
             });
 
-            var client = new HttpClient(mockHandler)
+            var httpClient = new HttpClient(mockHandler)
             {
-                BaseAddress = new Uri("https://api.weather.com")
+                BaseAddress = new Uri("https://api.mockweather.com")
             };
 
-            var weatherClient = new WeatherClient(client);
+            IWeatherClient client = new WeatherClient(httpClient);
 
             // Act & Assert
-            await Assert.ThrowsAsync<HttpRequestException>(() => weatherClient.GetCurrentWeatherAsync("InvalidCity"));
+            await Assert.ThrowsAsync<HttpRequestException>(() => client.GetCurrentWeatherAsync("FailingCity"));
         }
     }
 }
